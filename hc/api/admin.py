@@ -156,9 +156,9 @@ class ChannelsAdmin(admin.ModelAdmin):
             'all': ('css/admin/channels.css',)
         }
 
-    search_fields = ["value", "user__email"]
+    search_fields = ["name", "value", "user__email"]
     list_select_related = ("user", )
-    list_display = ("id", "code", "email", "formatted_kind", "value",
+    list_display = ("id", "code", "name", "email", "formatted_kind", "value",
                     "num_notifications")
     list_filter = ("kind", )
     raw_id_fields = ("user", "checks", )
