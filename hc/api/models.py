@@ -162,8 +162,8 @@ class Check(models.Model):
         return tag_set.issubset(self.tags_list())
 
     def to_dict(self):
-        update_rel_url = reverse("hc-api-update", args=[self.code])
-        pause_rel_url = reverse("hc-api-pause", args=[self.code])
+        update_rel_url = reverse("hc-api-checks-update", args=[self.code])
+        pause_rel_url = reverse("hc-api-checks-pause", args=[self.code])
 
         result = {
             "name": self.name,
@@ -539,4 +539,4 @@ class Notification(models.Model):
     error = models.CharField(max_length=200, blank=True)
 
     def bounce_url(self):
-        return settings.SITE_ROOT + reverse("hc-api-bounce", args=[self.code])
+        return settings.SITE_ROOT + reverse("hc-api-checks-bounce", args=[self.code])

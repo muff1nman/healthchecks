@@ -36,7 +36,7 @@ def ping(request, code, is_fail=False):
     return response
 
 
-def _lookup(user, spec):
+def _check_lookup(user, spec):
     unique_fields = spec.get("unique", [])
     if unique_fields:
         existing_checks = Check.objects.filter(user=user)
@@ -54,7 +54,7 @@ def _lookup(user, spec):
         return existing_checks.first()
 
 
-def _update(check, spec):
+def _check_update(check, spec):
     if "name" in spec:
         check.name = spec["name"]
 
@@ -110,7 +110,7 @@ def get_checks(request):
 @authorize
 def create_check(request):
     created = False
-    check = _lookup(request.user, request.json)
+    check = _check_lookup(request.user, request.json)
     if check is None:
         num_checks = Check.objects.filter(user=request.user).count()
         if num_checks >= request.user.profile.check_limit:
@@ -119,7 +119,7 @@ def create_check(request):
         check = Check(user=request.user)
         created = True
 
-    _update(check, request.json)
+    _check_update(check, request.json)
     return JsonResponse(check.to_dict(), status=201 if created else 200)
 
 
@@ -137,13 +137,13 @@ def checks(request):
 @csrf_exempt
 @validate_json(schemas.check)
 @authorize
-def update(request, code):
+def checks_update(request, code):
     check = get_object_or_404(Check, code=code)
     if check.user != request.user:
         return HttpResponseForbidden()
 
     if request.method == "POST":
-        _update(check, request.json)
+        _check_update(check, request.json)
         return JsonResponse(check.to_dict())
 
     elif request.method == "DELETE":
@@ -159,7 +159,7 @@ def update(request, code):
 @require_POST
 @validate_json()
 @authorize
-def pause(request, code):
+def checks_pause(request, code):
     check = get_object_or_404(Check, code=code)
     if check.user != request.user:
         return HttpResponseForbidden()
@@ -202,7 +202,7 @@ def badge(request, username, signature, tag, format="svg"):
 
 
 @csrf_exempt
-def bounce(request, code):
+def checks_bounce(request, code):
     notification = get_object_or_404(Notification, code=code)
 
     # If webhook is more than 10 minutes late, don't accept it:
@@ -225,3 +225,35 @@ def status(request):
         c.fetchone()
 
     return HttpResponse("OK")
+
+
+@csrf_exempt
+def channels(request):
+    if request.method == "GET":
+        return get_channels(request)
+
+    elif request.method == "POST":
+        return create_channels(request)
+
+    return HttpResponse(status=405)
+
+
+@csrf_exempt
+@validate_json(schemas.channel)
+@authorize
+def channels_update(request, code):
+    channel = get_object_or_404(Channel, code=code)
+    if channel.user != request.user:
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        _channel_update(channel, request.json)
+        return JsonResponse(channel.to_dict())
+
+    elif request.method == "DELETE":
+        response = channel.to_dict()
+        channel.delete()
+        return JsonResponse(response)
+
+    # Otherwise, method not allowed
+    return HttpResponse(status=405)

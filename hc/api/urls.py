@@ -9,10 +9,13 @@ urlpatterns = [
          name="hc-fail"),
 
     path('api/v1/checks/', views.checks),
-    path('api/v1/checks/<uuid:code>', views.update, name="hc-api-update"),
-    path('api/v1/checks/<uuid:code>/pause', views.pause, name="hc-api-pause"),
-    path('api/v1/notifications/<uuid:code>/bounce', views.bounce,
-         name="hc-api-bounce"),
+    path('api/v1/checks/<uuid:code>', views.checks_update, name="hc-api-checks-update"),
+    path('api/v1/checks/<uuid:code>/pause', views.checks_pause, name="hc-api-checks-pause"),
+    path('api/v1/notifications/<uuid:code>/bounce', views.checks_bounce,
+         name="hc-api-checks-bounce"),
+
+    path('api/v1/channels/', views.channels),
+    path('api/v1/channels/<uuid:code>', views.channels_update, name="hc-api-channels-update"),
 
     path('badge/<slug:username>/<slug:signature>/<slug:tag>.svg', views.badge,
          name="hc-badge"),

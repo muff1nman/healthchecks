@@ -14,3 +14,9 @@ check = {
         }
     }
 }
+channel = {
+    "type": "object",
+    "properties": {
+        "
+    }
+}
