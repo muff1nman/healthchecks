@@ -232,8 +232,8 @@ def channels(request):
     if request.method == "GET":
         return get_channels(request)
 
-    elif request.method == "POST":
-        return create_channels(request)
+    #elif request.method == "POST":
+        #return create_channels(request)
 
     return HttpResponse(status=405)
 
@@ -246,14 +246,26 @@ def channels_update(request, code):
     if channel.user != request.user:
         return HttpResponseForbidden()
 
-    if request.method == "POST":
-        _channel_update(channel, request.json)
-        return JsonResponse(channel.to_dict())
+    #if request.method == "POST":
+    #    _channel_update(channel, request.json)
+    #    return JsonResponse(channel.to_dict())
 
-    elif request.method == "DELETE":
-        response = channel.to_dict()
-        channel.delete()
-        return JsonResponse(response)
+    #elif request.method == "DELETE":
+    #    response = channel.to_dict()
+    #    channel.delete()
+    #    return JsonResponse(response)
 
     # Otherwise, method not allowed
     return HttpResponse(status=405)
+
+
+@validate_json()
+@authorize_read
+def get_channels(request):
+    q = Channel.objects.filter(user=request.user)
+
+    channels = []
+    for channel in q:
+        channels.append(channel.to_dict())
+
+    return JsonResponse({"channels": channels})

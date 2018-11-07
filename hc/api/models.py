@@ -230,6 +230,7 @@ class Ping(models.Model):
 
 class Channel(models.Model):
     code = models.UUIDField(default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, blank=True)
     user = models.ForeignKey(User, models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     kind = models.CharField(max_length=20, choices=CHANNEL_KINDS)
@@ -270,6 +271,17 @@ class Channel(models.Model):
         args = [self.code, self.make_token()]
         verify_link = reverse("hc-unsubscribe-alerts", args=args)
         return settings.SITE_ROOT + verify_link
+
+    def to_dict(self):
+
+        result = {
+            "name": self.name,
+            "code": str(self.code),
+            "kind": self.kind,
+            "value": self.value
+        }
+
+        return result
 
     @property
     def transport(self):
