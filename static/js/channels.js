@@ -46,4 +46,17 @@ $(function() {
 
     $('[data-toggle="tooltip"]').tooltip();
 
+
+    $(".my-channels-name").click(function() {
+        var code = $(this).closest("tr.channel-row").attr("id");
+        var url = "/integrations/" + code + "/name/";
+
+        $("#update-channel-name-form").attr("action", url);
+        $("#update-name-input").val(this.dataset.name);
+        $('#update-channel-name-modal').modal("show");
+        $("#update-name-input").focus();
+
+        return false;
+    });
+
 });

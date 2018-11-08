@@ -20,6 +20,10 @@
     background: #f5f5f5;
 }
 
+.channels-table .unnamed {
+    color: #999;
+    font-style: italic;
+}
 
 
 table.channels-table > tbody > tr > th {
@@ -74,13 +78,21 @@ table.channels-table > tbody > tr > th {
 
 }
 
+.my-channels-name {
+    border: 1px solid #FFF;
+    padding: 6px;
+    display: inline-block;
+}
+
 .edit-checks:hover {
     text-decoration: none;
     color: #000;
 }
 
-.channel-row:hover .edit-checks {
+.channel-row:hover .edit-checks,
+.channel-row:hover .my-channels-name {
     border: 1px dotted #AAA;
+    cursor: pointer;
 }
 
 .channel-remove {

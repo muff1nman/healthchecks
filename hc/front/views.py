@@ -22,7 +22,7 @@ from hc.api.models import (DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check,
 from hc.api.transports import Telegram
 from hc.front.forms import (AddWebhookForm, NameTagsForm,
                             TimeoutForm, AddUrlForm, AddEmailForm,
-                            AddOpsGenieForm, CronForm, AddSmsForm)
+                            AddOpsGenieForm, CronForm, AddSmsForm, ChannelUpdateNameForm)
 from hc.front.schemas import telegram_callback
 from hc.front.templatetags.hc_extras import (num_down_title, down_title,
                                              sortchecks)
@@ -518,6 +518,21 @@ def unsubscribe_email(request, code, token):
 
     channel.delete()
     return render(request, "front/unsubscribe_success.html")
+
+
+@require_POST
+@login_required
+def update_channel_name(request, code):
+    channel = get_object_or_404(Channel, code=code)
+    if channel.user_id != request.team.user.id:
+        return HttpResponseForbidden()
+
+    form = ChannelUpdateNameForm(request.POST)
+    if form.is_valid():
+        channel.name = form.cleaned_data["name"]
+        channel.save()
+
+    return redirect("hc-channels")
 
 
 @require_POST

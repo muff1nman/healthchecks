@@ -1,0 +1,40 @@
+<div id="update-channel-name-modal" class="modal">
+    <div class="modal-dialog">
+        <form
+            id="update-channel-name-form"
+            class="form-horizontal"
+            method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="update-timeout-title">Update Channel</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label for="update-name-input" class="col-sm-2 control-label">
+                                Name
+                            </label>
+                            <div class="col-sm-10">
+                                <input
+                                    id="update-name-input"
+                                    name="name"
+                                    type="text"
+                                    placeholder="unnamed"
+                                    class="input-name form-control" />
+
+                                <span class="help-block">
+                                    Give this channel a human-friendly name,
+                                    so you can easily recognize it later.
+                                </span>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

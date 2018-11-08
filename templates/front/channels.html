@@ -18,6 +18,7 @@
     <table class="table channels-table">
         {% if channels %}
         <tr>
+            <th>Name</th>
             <th>Type</th>
             <th>Value</th>
             <th>Assigned Checks</th>
@@ -25,7 +26,16 @@
             <th></th>
         </tr>
         {% for ch in channels %}
-        <tr class="channel-row">
+        <tr
+            id="{{ ch.code }}"
+            class="channel-row" >
+            <td>
+                <div
+                    class="my-channels-name {% if not ch.name %}unnamed{% endif %}"
+                    data-name="{{ ch.name }}">
+                    {{ ch.name|default:"unnamed"|break_underscore }}
+                </div>
+            </td>
             <td>{{ ch.get_kind_display }}</td>
             <td class="value-cell">
                 {% if ch.kind == "email" %}
@@ -362,6 +372,9 @@
         </form>
     </div>
 </div>
+
+{% include "front/update_channel_name_modal.html" %}
+
 
 {% for ch in channels %}
 {% if ch.kind == "webhook" %}
